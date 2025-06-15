@@ -12,9 +12,13 @@ export async function GET() {
       },
     });
     return NextResponse.json(books);
-  } catch {
+  } catch (error) {
+    console.error('Erro ao buscar livros:', error);
     return NextResponse.json(
-      { error: 'Erro ao buscar livros' },
+      {
+        error: 'Erro ao buscar livros',
+        details: error instanceof Error ? error.message : 'Erro desconhecido',
+      },
       { status: 500 }
     );
   }
@@ -31,7 +35,14 @@ export async function POST(request: Request) {
       },
     });
     return NextResponse.json(newBook, { status: 201 });
-  } catch {
-    return NextResponse.json({ error: 'Erro ao criar livro' }, { status: 500 });
+  } catch (error) {
+    console.error('Erro ao criar livro:', error);
+    return NextResponse.json(
+      {
+        error: 'Erro ao criar livro',
+        details: error instanceof Error ? error.message : 'Erro desconhecido',
+      },
+      { status: 500 }
+    );
   }
 }

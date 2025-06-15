@@ -16,9 +16,13 @@ export async function PUT(
       data: { title, description },
     });
     return NextResponse.json(updatedBook);
-  } catch {
+  } catch (error) {
+    console.error('Erro ao atualizar livro:', error);
     return NextResponse.json(
-      { error: 'Erro ao atualizar livro' }, // Corrigi a mensagem de erro aqui
+      {
+        error: 'Erro ao atualizar livro',
+        details: error instanceof Error ? error.message : 'Erro desconhecido',
+      },
       { status: 500 }
     );
   }
@@ -39,9 +43,13 @@ export async function DELETE(
       { message: 'Livro excluído com sucesso' },
       { status: 200 }
     );
-  } catch {
+  } catch (error) {
+    console.error('Erro ao excluir livro:', error);
     return NextResponse.json(
-      { error: 'Erro ao excluir livro' }, // Corrigi a mensagem de erro aqui
+      {
+        error: 'Erro ao excluir livro',
+        details: error instanceof Error ? error.message : 'Erro desconhecido',
+      },
       { status: 500 }
     );
   }
