@@ -6,18 +6,19 @@ const prisma = new PrismaClient();
 // PUT: Atualizar um livro
 export async function PUT(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> } // Corrigi o tipo de params aqui
 ) {
+  const { id } = await params; // Extraí o id de params
   try {
     const { title, description } = await request.json();
     const updatedBook = await prisma.book.update({
-      where: { id: params.id },
+      where: { id },
       data: { title, description },
     });
     return NextResponse.json(updatedBook);
   } catch {
     return NextResponse.json(
-      { error: 'Erro ao buscar livros' },
+      { error: 'Erro ao atualizar livro' }, // Corrigi a mensagem de erro aqui
       { status: 500 }
     );
   }
@@ -26,11 +27,13 @@ export async function PUT(
 // DELETE: Excluir um livro
 export async function DELETE(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> } // Corrigi o tipo de params aqui
 ) {
+  const { id } = await params; // Extraí o id de params
+
   try {
     await prisma.book.delete({
-      where: { id: params.id },
+      where: { id },
     });
     return NextResponse.json(
       { message: 'Livro excluído com sucesso' },
@@ -38,7 +41,7 @@ export async function DELETE(
     );
   } catch {
     return NextResponse.json(
-      { error: 'Erro ao buscar livros' },
+      { error: 'Erro ao excluir livro' }, // Corrigi a mensagem de erro aqui
       { status: 500 }
     );
   }
